@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>分块运动</title>
+    <style>
+        .wrapper {
+            position: relative;
+            width: 960px;
+            height: 600px;
+            margin: 50px auto;
+            border: 10px solid #ddd;
+        }
+        
+        img {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .pieces-wrapper {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 960px;
+            height: 600px;
+        }
+        
+        .pieces-wrapper>section {
+            position: absolute;
+        }
+        
+        .button-wrap {
+            margin: 50px auto;
+            width: 900px;
+            height: 100px;
+        }
+        
+        button {
+            padding: 10px;
+            border-radius: 5px;
+            margin-right: 20px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wrapper">
+        <img src="images/car1.jpg" alt="">
+        <div class="pieces-wrapper"></div>
+    </div>
+    <div class="button-wrap">
+        <button id="from-left">从左向右</button>
+        <button id="from-top">从上向下</button>
+        <button id="top-left">从左上角开始变换</button>
+        <button id="top-right">从右上角开始变换</button>
+        <button id="bottom-left">从左下角开始变换</button>
+        <button id="bottom-right">从右下角开始变换</button>
+    </div>
+
+    <script src="jquery-3.2.0.min.js"></script>
+    <script>
+        var oImg = $('img');
+        var Height = oImg.height();
+        var Width = oImg.width();
+        var aPath = ['images/car1.jpg', 'images/car2.jpg', 'images/car3.jpg'];
+        var nPath = 0;
+        var bClick = false;
+        var nTotalRows = 10;
+        var nTotalCols = 10;
+        cutPieces(nTotalRows, nTotalCols, Width, Height);
+
+        var aButtons = $('.button-wrap').find('button');
+        aButtons.on('click', function (ev) {
+            aButtons.attr('disabled', true);
+            //orientation
+            var type = $(this).attr('id');
+            var delay = null;
+            var lastR = 0;
+            var lastC = 0;
+            switch (type) {
+                case 'from-left':
+                    delay = function (r, c) { return 120 * c; };
+                    lastC = nTotalCols - 1;
+                    lastR = nTotalRows - 1;
+                    break;
+                case 'from-top':
+                    delay = function (r, c) { return 120 * r; };
+                    lastC = nTotalCols - 1;
+                    lastR = nTotalRows - 1;
+                    break;
+                case 'top-left':
+                    delay = function (r, c) { return 120 * (r + c); };
+                    lastC = nTotalCols - 1;
+                    lastR = nTotalRows - 1;
+                    break;
+                case 'top-right':
+                    delay = function (r, c) { return 120 * (nTotalCols - c + r); };
+                    lastC = 0;
+                    lastR = nTotalRows - 1;
+                    break;
+                case 'bottom-left':
+                    delay = function (r, c) { return 120 * (nTotalRows - r + c); };
+                    lastC = nTotalCols - 1;
+                    lastR = 0;
+                    break;
+                case 'bottom-right':
+                    delay = function (r, c) { return 120 * (nTotalCols - c + nTotalRows - r); };
+                    lastC = 0;
+                    lastR = 0;
+                    break;
+            }
+
+            var aSection = $('section');
+            aSection.each(function (index) {
+                var cur = $(this);
+                var r = parseInt(cur.attr('data-row'));
+                var c = parseInt(cur.attr('data-col'));
+
+                setTimeout(function () {
+                    cur.animate({ 'opacity': 1 }, {
+                        complete: function () {
+                            if (r === lastR && lastC === c) {
+                                oImg.attr('src', aPath[(++nPath) % (aPath.length)]);
+                                aSection.css({
+                                    'background-image': 'url(' + aPath[(nPath + 1) % (aPath.length)] + ')',
+                                    'opacity': 0
+                                });
+                                aButtons.attr('disabled', false);
+                                delay = null;
+                                lastC = 0;
+                                lastR = 0;
+
+                            }
+                        }
+                    });
+                }, delay(r, c))
+            });
+            ev.stopPropagation();
+
+        });
+
+        $(document).mousedown(function () { return false; });
+
+        function cutPieces(rows, cols, Width, Height) {
+            var width = Width / cols;
+            var height = Height / rows;
+            var sectionWrapper = $('.pieces-wrapper');
+
+            for (var i = 0; i < rows; i++) {
+                for (var j = 0; j < cols; j++) {
+                    var left = j * width;
+                    var top = i * height;
+                    var oSection = $('<section></section>');
+                    oSection.css({
+                        'width': width + 'px',
+                        'height': height + 'px',
+                        'left': left + 'px',
+                        'top': top + 'px',
+                        'opacity': 0,
+                        'background-position': -left + 'px -' + top + 'px',
+                        'background-repeat': 'no-repeat',
+                        'background-image': 'url(' + aPath[(nPath + 1) % (aPath.length)] + ')'
+                    });
+                    oSection.attr({
+                        'data-row': i,
+                        'data-col': j
+                    });
+                    oSection.appendTo(sectionWrapper);
+                }
+            }
+        }
+    </script>
+</body>
+
+</html>

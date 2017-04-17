@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>进度条选项卡</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        
+        div {
+            position: relative;
+            margin: 50px auto;
+            width: 480px;
+            height: 300px;
+            border: 3px solid red;
+            overflow: hidden;
+            text-align: center;
+        }
+        
+        li {
+            list-style: none;
+        }
+        
+        .content {
+            position: absolute;
+            width: 480px;
+        }
+        
+        .content>li {
+            width: 100%;
+            height: 300px;
+        }
+
+        .content>li>img{
+            width: 480px;
+        }
+        
+        .selector {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+        }
+        
+        .selector>li {
+            position: relative;
+            display: block;
+            left: -50%;
+            float: left;
+            width: 48px;
+            height: 20px;
+            margin-right: 10px;
+            background: #999;
+        }
+        
+        .selector em {
+            display: block;
+            height: 100%;
+            background: #fff;
+        }
+    </style>
+</head>
+
+<body>
+    <div>
+        <ul class="content">
+            <li><img src="./images/snowynight12.jpg" alt=""></li>
+            <li><img src="./images/snowynight5.jpg" alt=""></li>
+            <li><img src="./images/snowynight8.jpg" alt=""></li>
+            <li><img src="./images/snowynight9.jpg" alt=""></li>
+        </ul>
+        <ul class="selector">
+            <li><em></em></li>
+            <li><em></em></li>
+            <li><em></em></li>
+            <li><em></em></li>
+        </ul>
+    </div>
+    <script src="jquery-3.2.0.min.js"></script>
+    <script>
+        var aEm = $('em');
+        var oUl = $('.content');
+        var n = 0;
+        function next() {
+            aEm.css('width', 0);
+            aEm.eq(n).animate({
+                width: '100%'
+            }, {
+                    duration: 1200,
+                    complete: function () {
+                        n = (n + 1) % aEm.length;
+                        oUl.animate({
+                            top: (-300) * n + 'px'
+                        }, { duration: 400 });
+                        next();
+                    }
+                });
+        }
+        next();
+    </script>
+</body>
+
+</html>
