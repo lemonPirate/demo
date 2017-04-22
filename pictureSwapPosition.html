@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>照片墙</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        
+        .outer {
+            display: block;
+            width: 660px;
+            height: 660px;
+            border: 3px solid black;
+            margin: 50px auto;
+        }
+        
+        .inner {
+            position: relative;
+            display: block;
+            float: left;
+            width: 200px;
+            height: 200px;
+            margin: 10px;
+            background: #aaa;
+            cursor: move;
+        }
+        
+        .inner.active {
+            border: 5px dashed red;
+            box-sizing: border-box;
+        }
+        
+        .inner>img {
+            display: block;
+            width: 100%;
+        }
+        
+        .inner span {
+            display: block;
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            line-height: 200px;
+            font-size: 50px;
+            text-align: center;
+            opacity: 0.7;
+        }
+        
+        .instruction {
+            position: absolute;
+            left: 50px;
+            top: 50px;
+            width: 150px;
+        }
+        
+        .instruction li {
+            color: darkcyan;
+            background: #ccc;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <ol class="instruction">
+        <li>拖动照片可以和其他照片换位置</li>
+        <li>拖动照片超出边框会自动回到原来的位置</li>
+        <li>点击页面空白处，所有照片随机换位置</li>
+    </ol>
+    <div class="outer">
+        <div class="inner" data-drag><img src="./petImg/pet (0).jpg" alt=""><span></span></div>
+        <div class="inner" data-drag><img src="./petImg/pet (1).jpg" alt=""><span></span></div>
+        <div class="inner" data-drag><img src="./petImg/pet (2).jpg" alt=""><span></span></div>
+        <div class="inner" data-drag><img src="./petImg/pet (3).jpg" alt=""><span></span></div>
+        <div class="inner" data-drag><img src="./petImg/pet (4).jpg" alt=""><span></span></div>
+        <div class="inner" data-drag><img src="./petImg/pet (5).jpg" alt=""><span></span></div>
+        <div class="inner" data-drag><img src="./petImg/pet (6).jpg" alt=""><span></span></div>
+        <div class="inner" data-drag><img src="./petImg/pet (7).jpg" alt=""><span></span></div>
+        <div class="inner" data-drag><img src="./petImg/pet (8).jpg" alt=""><span></span></div>
+    </div>
+    <script src="./scripts/jquery-3.2.0.min.js"></script>
+    <script>
+        var aInner = $('.inner');
+        var aPos = positionAbsolute(aInner);
+        // addIndex(aInner);
+
+
+        //把一个数组的元素的定位改成absolute，一般之前是float
+        function positionAbsolute(arr) {
+            var aPos = [];
+            arr.each(function () {
+                var left = $(this).offset().left;
+                var top = $(this).offset().top;
+                var json = { left: left + 'px', top: top + 'px' };
+                aPos.push(json);
+            });
+            arr.each(function (index) {
+                $(this).css({
+                    position: 'absolute',
+                    left: aPos[index].left,
+                    top: aPos[index].top,
+                    margin: 0,
+                });
+            })
+            return aPos;
+        }
+
+
+        //add index
+        function addIndex(arr) {
+            arr.each(function (index) {
+                $(this).find('span').html(index);
+            });
+        }
+    </script>
+    <script src="./scripts/swapPosition.js"></script>
+    <script>
+        $(document).mousedown(function () {
+            return false;
+        })
+
+        $('.outer').click(function () {
+            return false;
+        })
+
+        var bDown = false;
+        $(document).click(function () {
+            if (bDown) {
+                return;
+            } else {
+                bDown = true;
+                aInner.removeClass('active');
+                //打乱数组顺序
+                aPos.sort(function () {
+                    return Math.random() - 0.5;
+                })
+                aInner.each(function (index) {
+                    // console.log(index);
+                    // console.log(typeof index);
+                    $(this).animate(aPos[index], {
+                        complete: function () {
+                            if (index === aInner.length - 1) {
+                                bDown = false;
+                            }
+                        }
+                    });
+                })
+            }
+
+        })
+    </script>
+
+</body>
+
+</html>

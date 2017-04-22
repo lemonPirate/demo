@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title> 九宫格选项卡</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        
+        ul,
+        li {
+            list-style: none;
+        }
+        
+        .box {
+            width: 308px;
+            height: 308px;
+            margin: 50px auto;
+        }
+        
+        .box ul {
+            width: 100%;
+            height: 100%;
+        }
+        
+        .box ul.hover img {
+            opacity: 0.5;
+        }
+        
+        .box ul::after {
+            content: '';
+            clear: both;
+            display: none;
+        }
+        
+        .box li {
+            float: left;
+            position: relative;
+            width: 100px;
+            height: 100px;
+            text-align: center;
+            border: 2px solid darkgray;
+            margin-left: -2px;
+            margin-top: -2px;
+        }
+        
+        .box a {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .box img {
+            display: block;
+            width: 96px;
+            height: 96px;
+            border: 2px solid #fff;
+        }
+        
+        .box li>span {
+            position: absolute;
+            left: 102px;
+            top: -2px;
+            display: none;
+            width: 102px;
+            height: 104px;
+            font-size: 12px;
+            line-height: 30px;
+            background: #e72163;
+        }
+        
+        .box .right>span {
+            left: -104px;
+        }
+        
+        .box .active {
+            z-index: 1;
+            border-color: #e72163;
+        }
+        
+        .box li.active img {
+            border-color: #e72163;
+            z-index: 1;
+            opacity: 1;
+        }
+        
+        .box .active>span {
+            display: block;
+        }
+    </style>
+    <script>
+        window.onload = function () {
+            var dDiv = document.getElementsByClassName('box')[0];
+            var dUl = dDiv.getElementsByTagName('ul')[0];
+            var aLi = dUl.getElementsByTagName('li');
+            var aA = dUl.getElementsByTagName('a');
+
+
+            dUl.onmouseover = function () {
+                this.classList.add('hover');
+            };
+
+            dUl.onmouseout = function () {
+                this.classList.remove('hover');
+            };
+
+
+            for (var i = 0; i < aA.length; i++) {
+                aA[i].index = i;
+                aA[i].onmouseover = function () {
+                    aLi[this.index].classList.add('active');
+                }
+
+                aA[i].onmouseout = function () {
+                    // dUl.style.opacity = 0.5;
+                    aLi[this.index].classList.remove('active');
+                }
+            }
+        }
+    </script>
+</head>
+
+<body>
+    <div class="box">
+        <ul>
+            <li>
+                <a href=""><img src="./nineSquaredUpImage/1.jpg" alt=""></a><span>日本最美的女星-新垣结衣</span></li>
+            <li>
+                <a href=""><img src="./nineSquaredUpImage/2.jpg" alt=""></a><span>日本最美的女星-新垣结衣</span></li>
+            <li class="right">
+                <a href=""><img src="./nineSquaredUpImage/3.jpg" alt=""></a><span>日本最美的女星-新垣结衣</span></li>
+            <li>
+                <a href=""><img src="./nineSquaredUpImage/4.jpg" alt=""></a><span>日本最美的女星-新垣结衣</span></li>
+            <li>
+                <a href=""><img src="./nineSquaredUpImage/5.jpg" alt=""></a><span>日本最美的女星-新垣结衣</span></li>
+            <li class="right">
+                <a href=""><img src="./nineSquaredUpImage/6.jpg" alt=""></a><span>日本最美的女星-新垣结衣</span></li>
+            <li>
+                <a href=""><img src="./nineSquaredUpImage/7.jpg" alt=""></a><span>日本最美的女星-新垣结衣</span></li>
+            <li>
+                <a href=""><img src="./nineSquaredUpImage/8.jpg" alt=""></a><span>日本最美的女星-新垣结衣</span></li>
+            <li class="right">
+                <a href=""><img src="./nineSquaredUpImage/9.jpg" alt=""></a>
+                <span>日本最美的女星-新垣结衣</span>
+            </li>
+        </ul>
+    </div>
+</body>
+
+</html>

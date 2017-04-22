@@ -1,0 +1,120 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>京东轮播图</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+        
+        li {
+            list-style: none;
+        }
+        
+        img {
+            border: none;
+        }
+        
+        .box {
+            width: 670px;
+            height: 240px;
+            margin: 50px auto;
+            position: relative;
+        }
+        
+        .imgBox img {
+            width: 670px;
+            height: 240px;
+            display: block;
+        }
+        
+        .num {
+            position: absolute;
+            bottom: 5px;
+            right: 5px;
+        }
+        
+        .num li {
+            float: left;
+            margin-right: 5px;
+            width: 22px;
+            height: 22px;
+            background: #999;
+            color: #FFF;
+            line-height: 22px;
+            text-align: center;
+            border-radius: 50% 50%;
+            font-family: "微软雅黑";
+            font-size: 12px;
+        }
+        
+        .num .active {
+            background: #E4393C;
+        }
+    </style>
+
+    <script>
+        window.onload = function () {
+            var dUl = document.getElementById('num');
+            var dBox = document.getElementsByClassName('box')[0];
+            var aLi = dUl.children;
+            var dImg = document.getElementById('imgs').getElementsByTagName('img')[0];
+            var i = 0;
+            var timer = null;
+
+            play();
+
+            dBox.onmouseover = function () {
+                clearInterval(timer);
+            };
+
+            dBox.onmouseout = play;
+
+            function play() {
+                timer = setInterval(function () {
+                    aLi[i].classList.remove('active');
+                    i++;
+                    if (i >= 6) {
+                        i = i % 6;
+                    }
+                    aLi[i].classList.add('active');
+                    dImg.src = 'jdSliderImage/pic' + (i + 1) + '.jpg';
+                }, 2000);
+            }
+
+            //小圆点移入效果
+            for (var j = 0; j < aLi.length; j++) {
+                aLi[j].index = j;
+                aLi[j].onmouseover = function () {
+                    for (var j = 0; j < aLi.length; j++) {
+                        aLi[j].classList.remove('active');
+                    }
+                    i = this.index;
+                    aLi[i].classList.add('active');
+                    dImg.src = 'jdSliderImage/pic' + (this.index + 1) + '.jpg';
+                }
+            }
+        }
+    </script>
+</head>
+
+<body>
+    <div class="box">
+        <div class="imgBox" id="imgs">
+            <a href="javascript:;"><img src="jdSliderImage/pic1.jpg" alt=""></a>
+        </div>
+        <ul class="num" id="num">
+            <li class="active">1</li>
+            <li>2</li>
+            <li>3</li>
+            <li>4</li>
+            <li>5</li>
+            <li>6</li>
+        </ul>
+    </div>
+</body>
+
+</html>
